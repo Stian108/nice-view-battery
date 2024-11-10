@@ -2,9 +2,6 @@
 #include "battery.h"
 #include "../assets/font.h"
 
-#define OFFSET_X 6
-#define OFFSET_Y 9
-
 LV_IMG_DECLARE(bolt);
 LV_IMG_DECLARE(battery);
 LV_IMG_DECLARE(battery_mask);
@@ -25,7 +22,14 @@ void draw_battery_status(lv_obj_t *canvas, const struct status_state *state)
     lv_canvas_draw_img(canvas, 2, 2, &battery_mask, &img_dsc);
 
     char text[10] = {};
-    sprintf(text, "%i%%", state->battery);
+    if (state->charging)
+    {
+        sprintf(text, "%i%%+", state->battery);
+    } 
+    else
+    {
+        sprintf(text, "%i%%", state->battery);
+    }
 
     const int y = 9;
     const int w = 62;
@@ -45,14 +49,20 @@ void draw_battery_status(lv_obj_t *canvas, const struct status_state *state)
 
     // Peripheral Battery
 
-    const int offset = 32;
+    const int offset = 34;
 
     lv_canvas_draw_img(canvas, 0, offset, &battery, &img_dsc);
     lv_canvas_draw_rect(canvas, 4, 4 + offset, 54 * state->battery / 100, 23, &rect_dsc);
     lv_canvas_draw_img(canvas, 2, 2 + offset, &battery_mask, &img_dsc);
 
-    sprintf(text, "%i%%", state->battery);
-
+    if (state->charging)
+    {
+        sprintf(text, "%i%%+", state->battery);
+    } 
+    else
+    {
+        sprintf(text, "%i%%", state->battery);
+    }
     for (int dx = -1; dx <= 1; dx++)
     {
         for (int dy = -1; dy <= 1; dy++)
@@ -65,11 +75,4 @@ void draw_battery_status(lv_obj_t *canvas, const struct status_state *state)
     }
 
     lv_canvas_draw_text(canvas, 0, y + offset, w, &label_dsc, text);
-
-    // Charging Status
-
-    if (state->charging)
-    {
-        lv_canvas_draw_img(canvas, OFFSET_X, OFFSET_Y, &bolt, &img_dsc);
-    }
 }
