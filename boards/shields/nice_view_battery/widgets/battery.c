@@ -3,7 +3,7 @@
 #include "../assets/font.h"
 
 #define OFFSET_X 29
-#define OFFSET_Y 37
+#define OFFSET_Y 64
 
 LV_IMG_DECLARE(bolt);
 LV_IMG_DECLARE(battery);
