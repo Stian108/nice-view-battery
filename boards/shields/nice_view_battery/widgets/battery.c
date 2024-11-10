@@ -2,8 +2,8 @@
 #include "battery.h"
 #include "../assets/font.h"
 
-#define OFFSET_X 29
-#define OFFSET_Y 64
+#define OFFSET_X 6
+#define OFFSET_Y 9
 
 LV_IMG_DECLARE(bolt);
 LV_IMG_DECLARE(battery);
@@ -43,11 +43,6 @@ void draw_battery_status(lv_obj_t *canvas, const struct status_state *state)
 
     lv_canvas_draw_text(canvas, 0, y, w, &label_dsc, text);
 
-    if (state->charging)
-    {
-        lv_canvas_draw_img(canvas, OFFSET_X, OFFSET_Y, &bolt, &img_dsc);
-    }
-
     // Peripheral Battery
 
     const int offset = 32;
@@ -70,4 +65,11 @@ void draw_battery_status(lv_obj_t *canvas, const struct status_state *state)
     }
 
     lv_canvas_draw_text(canvas, 0, y + offset, w, &label_dsc, text);
+
+    // Charging Status
+
+    if (state->charging)
+    {
+        lv_canvas_draw_img(canvas, OFFSET_X, OFFSET_Y, &bolt, &img_dsc);
+    }
 }
