@@ -52,9 +52,9 @@ void draw_battery_status(lv_obj_t *canvas, const struct status_state *state)
 
     const int offset = 32;
 
-    lv_canvas_draw_img(canvas, 0, -offset, &battery, &img_dsc);
-    lv_canvas_draw_rect(canvas, 4, 4 - offset, 54 * state->battery / 100, 23, &rect_dsc);
-    lv_canvas_draw_img(canvas, 2, 2 - offset, &battery_mask, &img_dsc);
+    lv_canvas_draw_img(canvas, 0, offset, &battery, &img_dsc);
+    lv_canvas_draw_rect(canvas, 4, 4 + offset, 54 * state->battery / 100, 23, &rect_dsc);
+    lv_canvas_draw_img(canvas, 2, 2 + offset, &battery_mask, &img_dsc);
 
     sprintf(text, "%i%%", state->battery);
 
@@ -64,10 +64,10 @@ void draw_battery_status(lv_obj_t *canvas, const struct status_state *state)
         {
             if (dx != 0 || dy != 0)
             {
-                lv_canvas_draw_text(canvas, dx, y + dy - offset, w, &outline_dsc, text);
+                lv_canvas_draw_text(canvas, dx, y + dy + offset, w, &outline_dsc, text);
             }
         }
     }
 
-    lv_canvas_draw_text(canvas, 0, y - offset, w, &label_dsc, text);
+    lv_canvas_draw_text(canvas, 0, y + offset, w, &label_dsc, text);
 }

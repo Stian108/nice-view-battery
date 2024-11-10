@@ -26,7 +26,8 @@ static sys_slist_t widgets = SYS_SLIST_STATIC_INIT(&widgets);
 
 // Draw
 
-static void draw_top(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
+static void draw_top(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state)
+{
     lv_obj_t *canvas = lv_obj_get_child(widget, 0);
     draw_background(canvas, TOP_SIZE);
 
@@ -35,7 +36,8 @@ static void draw_top(lv_obj_t *widget, lv_color_t cbuf[], const struct status_st
     rotate_canvas(canvas, cbuf, TOP_SIZE);
 }
 
-static void draw_middle(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
+static void draw_middle(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state)
+{
     lv_obj_t *canvas = lv_obj_get_child(widget, 1);
     draw_background(canvas, CANVAS_SIZE);
 
@@ -44,7 +46,8 @@ static void draw_middle(lv_obj_t *widget, lv_color_t cbuf[], const struct status
     rotate_canvas(canvas, cbuf, CANVAS_SIZE);
 }
 
-static void draw_bottom(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state) {
+static void draw_bottom(lv_obj_t *widget, lv_color_t cbuf[], const struct status_state *state)
+{
     lv_obj_t *canvas = lv_obj_get_child(widget, 2);
     draw_background(canvas, CANVAS_SIZE);
 
@@ -57,7 +60,8 @@ static void draw_bottom(lv_obj_t *widget, lv_color_t cbuf[], const struct status
 // Battery status
 
 static void set_battery_status(struct zmk_widget_screen *widget,
-                               struct battery_status_state state) {
+                               struct battery_status_state state)
+{
 #if IS_ENABLED(CONFIG_USB_DEVICE_STACK)
     widget->state.charging = state.usb_present;
 #endif /* IS_ENABLED(CONFIG_USB_DEVICE_STACK) */
@@ -67,12 +71,14 @@ static void set_battery_status(struct zmk_widget_screen *widget,
     draw_middle(widget->obj, widget->cbuf2, &widget->state);
 }
 
-static void battery_status_update_cb(struct battery_status_state state) {
+static void battery_status_update_cb(struct battery_status_state state)
+{
     struct zmk_widget_screen *widget;
     SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) { set_battery_status(widget, state); }
 }
 
-static struct battery_status_state battery_status_get_state(const zmk_event_t *eh) {
+static struct battery_status_state battery_status_get_state(const zmk_event_t *eh)
+{
     const struct zmk_battery_state_changed *ev = as_zmk_battery_state_changed(eh);
 
     return (struct battery_status_state){
@@ -93,18 +99,21 @@ ZMK_SUBSCRIPTION(widget_battery_status, zmk_usb_conn_state_changed);
 
 // Layer status
 
-static void set_layer_status(struct zmk_widget_screen *widget, struct layer_status_state state) {
+static void set_layer_status(struct zmk_widget_screen *widget, struct layer_status_state state)
+{
     widget->state.layer_label = state.label;
 
     draw_bottom(widget->obj, widget->cbuf3, &widget->state);
 }
 
-static void layer_status_update_cb(struct layer_status_state state) {
+static void layer_status_update_cb(struct layer_status_state state)
+{
     struct zmk_widget_screen *widget;
     SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) { set_layer_status(widget, state); }
 }
 
-static struct layer_status_state layer_status_get_state(const zmk_event_t *eh) {
+static struct layer_status_state layer_status_get_state(const zmk_event_t *eh)
+{
     uint8_t index = zmk_keymap_highest_layer_active();
     return (struct layer_status_state){.index = index, .label = zmk_keymap_layer_name(index)};
 }
@@ -117,7 +126,8 @@ ZMK_SUBSCRIPTION(widget_layer_status, zmk_layer_state_changed);
 // Output status
 
 static void set_output_status(struct zmk_widget_screen *widget,
-                              const struct output_status_state *state) {
+                              const struct output_status_state *state)
+{
     widget->state.selected_endpoint = state->selected_endpoint;
     widget->state.active_profile_index = state->active_profile_index;
     widget->state.active_profile_connected = state->active_profile_connected;
@@ -127,12 +137,14 @@ static void set_output_status(struct zmk_widget_screen *widget,
     draw_bottom(widget->obj, widget->cbuf3, &widget->state);
 }
 
-static void output_status_update_cb(struct output_status_state state) {
+static void output_status_update_cb(struct output_status_state state)
+{
     struct zmk_widget_screen *widget;
     SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) { set_output_status(widget, &state); }
 }
 
-static struct output_status_state output_status_get_state(const zmk_event_t *_eh) {
+static struct output_status_state output_status_get_state(const zmk_event_t *_eh)
+{
     return (struct output_status_state){
         .selected_endpoint = zmk_endpoints_selected(),
         .active_profile_index = zmk_ble_active_profile_index(),
@@ -154,7 +166,8 @@ ZMK_SUBSCRIPTION(widget_output_status, zmk_ble_active_profile_changed);
 
 // Initialization
 
-int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
+int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent)
+{
     widget->obj = lv_obj_create(parent);
     lv_obj_set_size(widget->obj, 160, 68);
 
@@ -163,7 +176,7 @@ int zmk_widget_screen_init(struct zmk_widget_screen *widget, lv_obj_t *parent) {
     lv_canvas_set_buffer(top, widget->cbuf, TOP_SIZE, TOP_SIZE, LV_IMG_CF_TRUE_COLOR);
 
     lv_obj_t *middle = lv_canvas_create(widget->obj);
-    lv_obj_align(middle, LV_ALIGN_TOP_LEFT, 23, 0);
+    lv_obj_align(middle, LV_ALIGN_TOP_LEFT, 0, 0);
     lv_canvas_set_buffer(middle, widget->cbuf2, CANVAS_SIZE, CANVAS_SIZE, LV_IMG_CF_TRUE_COLOR);
 
     lv_obj_t *bottom = lv_canvas_create(widget->obj);
