@@ -47,6 +47,7 @@ void draw_battery_status(lv_obj_t *canvas, const struct status_state *state)
 
     lv_canvas_draw_text(canvas, 0, y, w, &label_dsc, text);
 
+#if IS_ENABLED(CONFIG_ZMK_SPLIT_ROLE_CENTRAL)
     // Peripheral Battery
 
     const int offset = 34;
@@ -69,4 +70,5 @@ void draw_battery_status(lv_obj_t *canvas, const struct status_state *state)
     }
 
     lv_canvas_draw_text(canvas, 0, y + offset, w, &label_dsc, text);
+#endif
 }
