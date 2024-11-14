@@ -52,17 +52,11 @@ void draw_battery_status(lv_obj_t *canvas, const struct status_state *state)
     const int offset = 34;
 
     lv_canvas_draw_img(canvas, 0, offset, &battery, &img_dsc);
-    lv_canvas_draw_rect(canvas, 4, 4 + offset, 54 * state->battery / 100, 23, &rect_dsc);
+    lv_canvas_draw_rect(canvas, 4, 4 + offset, 54 * state->battery_periph / 100, 23, &rect_dsc);
     lv_canvas_draw_img(canvas, 2, 2 + offset, &battery_mask, &img_dsc);
 
-    if (state->charging)
-    {
-        sprintf(text, "%i%%+", state->battery);
-    } 
-    else
-    {
-        sprintf(text, "%i%%", state->battery);
-    }
+    sprintf(text, "%i%%", state->battery_periph);
+
     for (int dx = -1; dx <= 1; dx++)
     {
         for (int dy = -1; dy <= 1; dy++)

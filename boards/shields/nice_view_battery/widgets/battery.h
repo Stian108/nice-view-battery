@@ -10,4 +10,8 @@ struct battery_status_state {
 #endif
 };
 
+struct peripheral_battery_status_state {
+    uint8_t level;
+};
+
 void draw_battery_status(lv_obj_t *canvas, const struct status_state *state);

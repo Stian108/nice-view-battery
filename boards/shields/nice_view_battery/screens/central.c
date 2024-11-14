@@ -97,6 +97,37 @@ ZMK_SUBSCRIPTION(widget_battery_status, zmk_battery_state_changed);
 ZMK_SUBSCRIPTION(widget_battery_status, zmk_usb_conn_state_changed);
 #endif /* IS_ENABLED(CONFIG_USB_DEVICE_STACK) */
 
+// Peripheral Battery status
+
+static void set_peripheral_battery_status(struct zmk_widget_screen *widget,
+                               struct peripheral_battery_status_state state)
+{
+    widget->state.battery_periph = state.level;
+
+    draw_middle(widget->obj, widget->cbuf2, &widget->state);
+}
+
+static void peripheral_battery_status_update_cb(struct peripheral_battery_status_state state)
+{
+    struct zmk_widget_screen *widget;
+    SYS_SLIST_FOR_EACH_CONTAINER(&widgets, widget, node) { set_peripheral_battery_status(widget, state); }
+}
+
+static struct peripheral_battery_status_state peripheral_battery_status_get_state(const zmk_event_t *eh)
+{
+    const struct zmk_peripheral_battery_state_changed *ev =
+        as_zmk_peripheral_battery_state_changed(eh);
+
+    return (struct peripheral_battery_status_state){
+        .level = ev->state_of_charge,
+    };
+}
+
+ZMK_DISPLAY_WIDGET_LISTENER(widget_peripheral_battery_status, struct peripheral_battery_status_state,
+                            peripheral_battery_status_update_cb, peripheral_battery_status_get_state);
+
+ZMK_SUBSCRIPTION(widget_peripheral_battery_status, zmk_peripheral_battery_state_changed);
+
 // Layer status
 
 static void set_layer_status(struct zmk_widget_screen *widget, struct layer_status_state state)
